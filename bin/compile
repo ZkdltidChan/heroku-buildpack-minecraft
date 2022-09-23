@@ -61,16 +61,27 @@ curl --silent -o ngrok.zip -L "https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable
 unzip ngrok.zip -d $BUILD_DIR/bin > /dev/null 2>&1
 echo "done"
 
-minecraft_version=${MINECRAFT_VERSION:-"1.18.1"}
+minecraft_version=${MINECRAFT_VERSION:-"1.19.2"}
 minecraft_url="$(cat $ETC_DIR/files.json | python -c "import json,sys;obj=json.load(sys.stdin);print(obj[\"server\"][\"${minecraft_version}\"][\"url\"])")"
 if [ -z "$minecraft_url" ]; then
   echo "Could not find URL for Minecraft version $minecraft_version. Please check files.json."
   exit 1
 fi
-
+ 
 echo -n "-----> Installing Minecraft ${minecraft_version}... "
 curl -o minecraft.jar -s -L $minecraft_url
 mv minecraft.jar $BUILD_DIR/minecraft.jar
+echo "done"
+
+#TODO if fabric:
+fabric_installer_url = "https://maven.fabricmc.net/net/fabricmc/fabric-installer/0.11.1/fabric-installer-0.11.1.jar"
+echo -n "-----> Installing Minecraft Fabric ${minecraft_version}... "
+curl -o installer.jar -s -L $fabric_url
+java -jar installer.jar server -mcversion ${minecraft_version} -downloadMinecraft
+rm installer.jar
+mv $BUILD_DIR/minecraft.jar $BUILD_DIR/vanilla.jar
+mv fabric-server-launch.jar $BUILD_DIR/minecraft.jar
+echo "serverJar=vanilla.jar" > fabric-server-launcher.properties
 echo "done"
 
 if [ -n "${MINECRAFT_EULA:-""}" ]; then

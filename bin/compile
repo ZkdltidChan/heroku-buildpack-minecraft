@@ -76,7 +76,7 @@ echo "done"
 #TODO if fabric:
 fabric_installer_url="https://maven.fabricmc.net/net/fabricmc/fabric-installer/0.11.1/fabric-installer-0.11.1.jar"
 echo -n "-----> Installing Minecraft Fabric ${minecraft_version}... "
-curl -o installer.jar -s -L $fabric_url
+curl -o installer.jar -s -L $fabric_installer_url
 java -jar installer.jar server -mcversion ${minecraft_version} -downloadMinecraft
 rm installer.jar
 mv $BUILD_DIR/minecraft.jar $BUILD_DIR/vanilla.jar

@@ -39,6 +39,9 @@ apt-get $APT_OPTIONS update -y | indent
 apt-get $APT_OPTIONS -y --allow-downgrades --allow-remove-essential --allow-change-held-packages -d install --reinstall screen | indent
 mkdir -p $BUILD_DIR/.apt/var/run/screen
 
+echo "-----> Installing ruby... "
+apt-get install ruby-full
+
 mkdir -p $BUILD_DIR/.profile.d
 cat <<EOF >$BUILD_DIR/.profile.d/000_apt.sh
 export PATH="\$HOME/.apt/usr/bin:\$PATH"
@@ -73,16 +76,16 @@ curl -o minecraft.jar -s -L $minecraft_url
 mv minecraft.jar $BUILD_DIR/minecraft.jar
 echo "done"
 
-# #TODO if fabric:
-# fabric_installer_url="https://maven.fabricmc.net/net/fabricmc/fabric-installer/0.11.1/fabric-installer-0.11.1.jar"
-# echo -n "-----> Installing Minecraft Fabric ${minecraft_version}... "
-# curl -o installer.jar -s -L $fabric_installer_url
-# java -jar installer.jar server -mcversion ${minecraft_version} -downloadMinecraft
-# rm installer.jar
-# mv $BUILD_DIR/minecraft.jar $BUILD_DIR/vanilla.jar
-# mv fabric-server-launch.jar $BUILD_DIR/minecraft.jar
-# echo "serverJar=vanilla.jar" > fabric-server-launcher.properties
-# echo "done"
+#TODO if fabric:
+fabric_installer_url="https://maven.fabricmc.net/net/fabricmc/fabric-installer/0.11.1/fabric-installer-0.11.1.jar"
+echo -n "-----> Installing Minecraft Fabric ${minecraft_version}... "
+curl -o installer.jar -s -L $fabric_installer_url
+java -jar installer.jar server -mcversion ${minecraft_version} -downloadMinecraft
+rm installer.jar
+mv $BUILD_DIR/minecraft.jar $BUILD_DIR/vanilla.jar
+mv fabric-server-launch.jar $BUILD_DIR/minecraft.jar
+echo "serverJar=vanilla.jar" > fabric-server-launcher.properties
+echo "done"
 
 if [ -n "${MINECRAFT_EULA:-""}" ]; then
   echo -n "-----> Accepting Minecraft EULA... "
